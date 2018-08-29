@@ -20,17 +20,17 @@ class ItemActivity : AppCompatActivity() {
 
         recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-        fun addItems() {
-            items.add(Item("Молоко", "70"))
-            items.add(Item("Зубная щётка", "70"))
-            items.add(Item("Сковородка с антипригарным покрытием", "4500"))
-            items.add(Item("Стол кухонный", "2000"))
-            items.add(Item("Велосипед", "5000"))
-            items.add(Item("Кружка", "100"))
-            items.add(Item("Палатка", "3000"))
-            items.add(Item("Рюкзак", "2999"))
-        }
-
         addItems()
+    }
+
+    private fun addItems() {
+        items.add(Item("Молоко", "70"))
+        items.add(Item("Зубная щётка", "70"))
+        items.add(Item("Сковородка с антипригарным покрытием", "4500"))
+        items.add(Item("Стол кухонный", "2000"))
+        items.add(Item("Велосипед", "5000"))
+        items.add(Item("Кружка", "100"))
+        items.add(Item("Палатка", "3000"))
+        items.add(Item("Рюкзак", "2999"))
     }
 }

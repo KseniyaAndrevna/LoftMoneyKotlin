@@ -14,14 +14,14 @@ class ItemsAdapter(private val items: List<Item>, private val context: Context) 
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.name.text = items[position].name
-        holder.price.text = items[position].price
+        holder.name?.text = items[position].name
+        holder.price?.text = items[position].price
     }
 
     override fun getItemCount()= items.size
 
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name = itemView.tv_name!!
-        val price = itemView.tv_price!!
+    class ItemViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+        val name = itemView?.tv_name
+        val price = itemView?.tv_price
     }
 }
