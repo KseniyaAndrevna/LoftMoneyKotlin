@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Add Screen -->
     <dimen name="add_et_margin_st_en">32dp</dimen>
     <dimen name="add_et_margin_b">8dp</dimen>
@@ -10,5 +11,13 @@
 
     <dimen name="add_et_size">24sp</dimen>
     <dimen name="add_btn_text_size">14sp</dimen>
+
+    <!-- Item -->
+    <dimen name="item_padding_st_en">24dp</dimen>
+    <dimen name="item_padding_t_b">28dp</dimen>
+
+    <dimen name="item_text_size">20dp</dimen>
+    <dimen name="item_text_margin_e">8dp</dimen>
+
 
 </resources>
