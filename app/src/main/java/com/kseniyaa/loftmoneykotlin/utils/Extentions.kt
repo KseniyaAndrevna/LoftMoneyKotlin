@@ -1,9 +1,11 @@
 package com.kseniyaa.loftmoneykotlin.utils
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
+import com.kseniyaa.loftmoneykotlin.ItemsFragment
 
 fun EditText.afterTextChanged(btn_add: Button, et_name :EditText, et_price :EditText ) {
     this.addTextChangedListener(object: TextWatcher {
@@ -15,4 +17,13 @@ fun EditText.afterTextChanged(btn_add: Button, et_name :EditText, et_price :Edit
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
     })
+}
+
+fun newInstance(KEY_TYPE: String, type: Int): ItemsFragment {
+    val fragment = ItemsFragment()
+    val bundle = Bundle()
+    bundle.putInt(KEY_TYPE, type)
+    fragment.arguments = bundle
+
+    return fragment
 }
