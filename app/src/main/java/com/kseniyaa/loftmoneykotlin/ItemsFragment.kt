@@ -17,11 +17,9 @@ class ItemsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val args = arguments ?: throw IllegalStateException("No fragment type")
+        val args = arguments
 
-        if (args.getInt(KEY_TYPE, TYPE_UNKNOWN) == TYPE_UNKNOWN) {
-            throw IllegalStateException("Unknown type")
-        }
+        if (args?.getInt(KEY_TYPE, TYPE_UNKNOWN) == TYPE_UNKNOWN) throw IllegalStateException("Unknown type")
 
         addItems()
     }

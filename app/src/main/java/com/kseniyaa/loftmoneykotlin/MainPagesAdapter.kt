@@ -9,7 +9,7 @@ import com.kseniyaa.loftmoneykotlin.utils.newInstance
 
 class MainPagesAdapter internal constructor(fm: FragmentManager, context: Context) : FragmentPagerAdapter(fm) {
 
-    private var pagesTitles: Array<String>? = context.resources.getStringArray(R.array.main_tabs)
+    private var pagesTitles: Array<String> = context.resources.getStringArray(R.array.main_tabs)
 
     override fun getItem(position: Int): Fragment? {
         return when (position) {
@@ -25,18 +25,17 @@ class MainPagesAdapter internal constructor(fm: FragmentManager, context: Contex
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return pagesTitles?.get(position)
+        return pagesTitles[position]
     }
 
     override fun getCount(): Int {
-        return PAGE_COUNT
+        return pagesTitles.size
     }
 
     companion object {
         const val PAGE_EXPENSES = 0
         const val PAGE_INCOMES = 1
         const val PAGE_BALANCE = 2
-        const val PAGE_COUNT = 3
     }
 }
 
