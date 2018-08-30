@@ -2,16 +2,10 @@ package com.kseniyaa.loftmoneykotlin.utils
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Button
 import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_add.view.et_name
-import kotlinx.android.synthetic.main.activity_add.view.btn_add
-import kotlinx.android.synthetic.main.activity_add.view.et_price
-//import kotlinx.android.synthetic.main.activity_add.view.*
 
-
-
-fun EditText.afterTextChanged() {
-
+fun EditText.afterTextChanged(btn_add: Button, et_name :EditText, et_price :EditText ) {
     this.addTextChangedListener(object: TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             btn_add.isEnabled = !(et_name.text.isEmpty() || et_price.text.isEmpty())
