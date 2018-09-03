@@ -19,10 +19,10 @@ fun EditText.afterTextChanged(btn_add: Button, et_name :EditText, et_price :Edit
     })
 }
 
-fun newInstance(KEY_TYPE: String, type: Int): ItemsFragment {
+fun newInstance(KEY_TYPE: String, type: String): ItemsFragment {
     val fragment = ItemsFragment()
     val bundle = Bundle()
-    bundle.putInt(KEY_TYPE, type)
+    bundle.putString(KEY_TYPE, type)
     fragment.arguments = bundle
 
     return fragment

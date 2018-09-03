@@ -1,3 +1,9 @@
 package com.kseniyaa.loftmoneykotlin
 
-data class Item (var name: String?, var price: String?)
+class Item(var name: String?, var price: Int?) {
+
+    companion object {
+        const val TYPE_EXPENSES = "expense"
+        const val TYPE_INCOMES = "income"
+    }
+}

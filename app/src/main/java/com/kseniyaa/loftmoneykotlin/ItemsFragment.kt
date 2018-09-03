@@ -8,9 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_items.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 class ItemsFragment : Fragment() {
+
+    var type: String? = ""
+    private var api: Api? = null
 
     private val items: ArrayList<Item> = ArrayList()
 
@@ -18,10 +24,12 @@ class ItemsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val args = arguments
+        type = args?.getString(KEY_TYPE)
 
-        if (args?.getInt(KEY_TYPE, TYPE_UNKNOWN) == TYPE_UNKNOWN) throw IllegalStateException("Unknown type")
+        api = (activity!!.application as App).api
 
-        addItems()
+        loadItems()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -31,26 +39,30 @@ class ItemsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         recycler.layoutManager = LinearLayoutManager(requireContext())
-        recycler.adapter = ItemsAdapter(items, requireContext())
+
 
         recycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    private fun addItems() {
-        items.add(Item("Молоко", "70"))
-        items.add(Item("Зубная щётка", "70"))
-        items.add(Item("Сковородка с антипригарным покрытием", "4500"))
-        items.add(Item("Стол кухонный", "2000"))
-        items.add(Item("Велосипед", "5000"))
-        items.add(Item("Кружка", "100"))
-        items.add(Item("Палатка", "3000"))
-        items.add(Item("Рюкзак", "2999"))
-    }
-
     companion object {
         const val KEY_TYPE = "type"
-        const val TYPE_EXPENSES = 1
-        const val TYPE_INCOMES = 2
-        const val TYPE_UNKNOWN = -1
+    }
+
+    private fun loadItems() {
+        val call: Call<List<Item>>? = api?.getItems(type)
+
+        call?.enqueue(object : Callback<List<Item>> {
+
+            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+                val items: List<Item>? = response.body()
+                recycler.adapter = ItemsAdapter(items!!, requireContext())
+            }
+
+            override fun onFailure(call: Call<List<Item>>, t: Throwable) {
+
+            }
+
+        })
     }
 }
+
