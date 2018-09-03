@@ -11,14 +11,12 @@ import kotlinx.android.synthetic.main.fragment_items.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 class ItemsFragment : Fragment() {
 
     var type: String? = ""
     private var api: Api? = null
 
-    private val items: ArrayList<Item> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
