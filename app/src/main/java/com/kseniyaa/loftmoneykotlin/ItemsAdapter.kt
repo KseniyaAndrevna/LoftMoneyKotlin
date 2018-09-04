@@ -1,15 +1,21 @@
 package com.kseniyaa.loftmoneykotlin
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item.view.*
 
-class ItemsAdapter(private val items: List<Item>, private val context: Context) : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
+class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
+
+    private var items = emptyList<Item>()
+
+    fun setItems(items: List<Item>) {
+        this.items = items
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+        val context = parent.context
         return ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item, parent, false))
     }
 

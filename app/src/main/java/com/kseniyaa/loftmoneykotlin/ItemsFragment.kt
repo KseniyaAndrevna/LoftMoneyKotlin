@@ -16,6 +16,7 @@ class ItemsFragment : Fragment() {
 
     var type: String? = ""
     private var api: Api? = null
+    var adapter = ItemsAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,6 @@ class ItemsFragment : Fragment() {
         api = (activity!!.application as App).api
 
         loadItems()
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,10 +35,8 @@ class ItemsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(requireContext())
-
-
         recycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
@@ -53,14 +51,18 @@ class ItemsFragment : Fragment() {
 
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 val items: List<Item>? = response.body()
-                recycler.adapter = ItemsAdapter(items!!, requireContext())
+
+                items?.let {adapter.setItems(it)}
+
+                adapter.notifyDataSetChanged()
             }
 
             override fun onFailure(call: Call<List<Item>>, t: Throwable) {
 
             }
-
         })
     }
 }
+
+
 
