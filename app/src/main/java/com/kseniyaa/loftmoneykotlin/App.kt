@@ -29,9 +29,7 @@ class App : Application() {
                 .create()
 
         val retrofit = Retrofit.Builder()
-              .baseUrl("http://loftmoney.getsandbox.com")
-              //  .baseUrl("https://verdant-violet.glitch.me")
-
+                .baseUrl("https://verdant-violet.glitch.me")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build()
