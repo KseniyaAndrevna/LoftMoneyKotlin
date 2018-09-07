@@ -14,9 +14,9 @@ class MainPagesAdapter internal constructor(fm: FragmentManager, context: Contex
     override fun getItem(position: Int): Fragment? {
         return when (position) {
 
-            PAGE_EXPENSES -> newInstance(ItemsFragment.KEY_TYPE,Item.Types.expense.toString())
+            PAGE_EXPENSES -> newInstance(Item.Types.expense.toString())
 
-            PAGE_INCOMES -> newInstance(ItemsFragment.KEY_TYPE, Item.Types.income.toString())
+            PAGE_INCOMES -> newInstance(Item.Types.income.toString())
 
             PAGE_BALANCE -> BalanceFragment()
 

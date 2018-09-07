@@ -40,27 +40,26 @@ class ItemsFragment : Fragment() {
         recycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
     }
 
-    companion object {
-        const val KEY_TYPE = "type"
-    }
-
     private fun loadItems() {
-        val call: Call<List<Item>>? = api?.getItems(type)
+        val call: Call<ItemsData>? = api?.getItems(type)
 
-        call?.enqueue(object : Callback<List<Item>> {
+        call?.enqueue(object : Callback<ItemsData> {
 
-            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                val items: List<Item>? = response.body()
-
+            override fun onResponse(call: Call<ItemsData>, response: Response<ItemsData>) {
+               val data = response.body()
+                val items: List<Item>? = data?.data
                 items?.let {adapter.setItems(it)}
-
                 adapter.notifyDataSetChanged()
             }
 
-            override fun onFailure(call: Call<List<Item>>, t: Throwable) {
+            override fun onFailure(call: Call<ItemsData>, t: Throwable) {
 
             }
         })
+    }
+
+    companion object {
+        const val KEY_TYPE = "type"
     }
 }
 
