@@ -8,10 +8,15 @@ import kotlinx.android.synthetic.main.item.view.*
 
 class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
 
-    private var items = emptyList<Item>()
+    private var items: MutableList<Item> = arrayListOf()
 
-    fun setItems(items: List<Item>) {
+    fun setItems(items: MutableList<Item>) {
         this.items = items
+    }
+
+    fun addItem(item: Item) {
+        this.items.add(item)
+        notifyItemInserted(items.size - 1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
