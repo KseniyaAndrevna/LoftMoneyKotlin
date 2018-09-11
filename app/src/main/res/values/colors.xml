@@ -15,14 +15,15 @@
     <color name="dark_sky_blue">#4a90e2</color>
     <color name="pale_orange">#ff9e57</color>
     <color name="perry_winkle_70">#b38baaef</color>
+    <color name="perry_winkle_100">#1e88e5</color>
     <color name="marigold">#ffc107</color>
-
 
     <color name="icon_launcher_color">@color/lightish_blue</color>
 
     <!-- Add Screen -->
     <color name="add_et_color">@color/lightish_blue</color>
     <color name="add_et_hint_color">@color/lightish_blue_alpha</color>
+    <color name="add_color_accent">@color/perry_winkle_100</color>
     <color name="add_btn_enabled_color">@color/apple_green</color>
     <color name="add_btn_disabled_color">@color/grey</color>
 
@@ -36,5 +37,14 @@
     <color name="tab_indicator_color">@color/marigold</color>
     <color name="tab_selected">@color/white</color>
     <color name="tab_not_selected">@color/perry_winkle_70</color>
+
+    <!-- Toolbar -->
+    <color name="toolbar_back_color">@color/lightish_blue</color>
+
+    <!-- Refresh -->
+    <color name="refresh_first">@color/pale_orange</color>
+    <color name="refresh_second">@color/marigold</color>
+    <color name="refresh_third">@color/apple_green</color>
+    <color name="refresh_fourth">@color/lightish_blue</color>
 
 </resources>
