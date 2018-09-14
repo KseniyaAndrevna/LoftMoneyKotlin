@@ -9,7 +9,9 @@ import android.support.v7.view.ActionMode
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var actionMode: ActionMode
+    var actionMode: ActionMode? = null
+    private var viewPager: ViewPager? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,18 +21,18 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MainPagesAdapter(supportFragmentManager, this)
 
-        val viewPager = view_pager
-        viewPager.adapter = adapter
+        viewPager = view_pager
+        viewPager?.adapter = adapter
 
-        tab_layout.setupWithViewPager(viewPager)
 
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                actionMode?.finish()
+            }
 
             override fun onPageSelected(position: Int) {
                 when (position) {
                     MainPagesAdapter.PAGE_INCOMES, MainPagesAdapter.PAGE_EXPENSES -> btn_fab.show()
-
                     MainPagesAdapter.PAGE_BALANCE -> btn_fab.hide()
                 }
             }
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         btn_fab.setOnClickListener {
-            val page = viewPager.currentItem
+            val page = viewPager?.currentItem
 
             var type: String? = null
 
@@ -57,8 +59,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onResume() {
+        super.onResume()
+        tab_layout.setupWithViewPager(viewPager)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         val fragments = supportFragmentManager.fragments
         for (fragment in fragments) {
             fragment.onActivityResult(requestCode, resultCode, data)
