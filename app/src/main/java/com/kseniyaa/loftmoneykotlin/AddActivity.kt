@@ -22,7 +22,7 @@ class AddActivity : AppCompatActivity() {
 
             val type = intent.extras!!.getString(KEY_TYPE)
 
-            val item = Item(name, Integer.parseInt(price), type)
+            val item = Item(10, name, Integer.parseInt(price), type)
 
             val intent = Intent()
             intent.putExtra(KEY_ITEM, item)
