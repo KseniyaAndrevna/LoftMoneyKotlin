@@ -1,5 +1,6 @@
 package com.kseniyaa.loftmoneykotlin
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -10,15 +11,11 @@ import java.util.*
 
 class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
 
-    private var items: MutableList<Item> = arrayListOf()
+    private var items: List<Item> = ArrayList()
     var listener: ItemsAdapterListener? = null
 
-    fun setItems(items: MutableList<Item>) {
+    fun setItems(items :List<Item> ) {
         this.items = items
-    }
-    fun addItem(item: Item) {
-        this.items.add(item)
-        notifyItemInserted(items.size - 1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -69,7 +66,7 @@ class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
 
         fun bind(item: Item, listener: ItemsAdapterListener?, position: Int, selected: Boolean) {
             if (item.type.equals(Item.Types.income.toString())) {
-                price?.setTextColor(itemView.resources.getColor(R.color.item_text_price_exp_color))
+                price?.setTextColor(ContextCompat.getColor(itemView.context, R.color.item_text_price_exp_color))
             }
 
             itemView.isSelected = selected

@@ -2,6 +2,7 @@ package com.kseniyaa.loftmoneykotlin
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         val fragments = supportFragmentManager.fragments
@@ -65,13 +67,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportActionModeFinished(mode: ActionMode) {
         super.onSupportActionModeFinished(mode)
-        tab_layout.setBackgroundColor(resources.getColor(R.color.tab_color_primary))
+        tab_layout.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.tab_color_primary))
         btn_fab.show()
     }
 
     override fun onSupportActionModeStarted(mode: ActionMode) {
         super.onSupportActionModeStarted(mode)
-        tab_layout.setBackgroundColor(resources.getColor(R.color.action_mode_back))
+        tab_layout.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.action_mode_back))
         btn_fab.hide()
         actionMode = mode
     }

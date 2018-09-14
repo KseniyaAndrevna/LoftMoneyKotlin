@@ -1,8 +1,11 @@
 package com.kseniyaa.loftmoneykotlin
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -23,6 +26,8 @@ class ItemsFragment : Fragment() {
     private var api: Api? = null
     var adapter = ItemsAdapter()
     var actionMode: ActionMode? = null
+    private var sharedPreferences: SharedPreferences? = null
+    private var auth_token: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +41,6 @@ class ItemsFragment : Fragment() {
 
         loadItems()
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_items, container, false)
@@ -68,25 +72,6 @@ class ItemsFragment : Fragment() {
         })
     }
 
-    private fun loadItems() {
-        val call: Call<ItemsData>? = api?.getItems(type)
-
-        call?.enqueue(object : Callback<ItemsData> {
-
-            override fun onResponse(call: Call<ItemsData>, response: Response<ItemsData>) {
-                refresh.isRefreshing = false
-                val data = response.body()
-                val items: List<Item>? = data?.data
-                items?.let { adapter.setItems(it as MutableList<Item>) }
-                adapter.notifyDataSetChanged()
-            }
-
-            override fun onFailure(call: Call<ItemsData>, t: Throwable) {
-                refresh.isRefreshing = false
-            }
-        })
-    }
-
     companion object {
         const val KEY_TYPE = "type"
         const val ITEM_REQUEST_CODE = 100
@@ -94,15 +79,9 @@ class ItemsFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if ((requestCode == ITEM_REQUEST_CODE) and (resultCode == RESULT_OK)) {
-            val item = data!!.getParcelableExtra<Item>(AddActivity.KEY_ITEM)
-            println(item.type)
-            if (item.type.equals(type)) {
-                adapter.addItem(item)
-            }
-        }
+        loadItems()
     }
+
 
     internal inner class AdapterListener : ItemsAdapterListener {
 
@@ -111,7 +90,6 @@ class ItemsFragment : Fragment() {
                 return
             }
             toggleItem(item.id)
-           // val item1:Item = item
             actionMode?.title = getString(R.string.action_mode_title) + adapter.getSelectedItems().size
             println(adapter.getSelectedItems().size)
         }
@@ -133,7 +111,7 @@ class ItemsFragment : Fragment() {
 
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
                 if (item?.itemId == R.id.menu_item_delete) {
-                    // showConfirmationDialog()
+                    showConfirmationDialog()
                     return true
                 }
                 return false
@@ -143,6 +121,7 @@ class ItemsFragment : Fragment() {
                 actionMode = mode
                 return true
             }
+
             override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
                 val inflater = MenuInflater(requireContext())
                 inflater.inflate(R.menu.menu_action_mode, menu)
@@ -154,6 +133,61 @@ class ItemsFragment : Fragment() {
                 actionMode = null
             }
         }
+
+        private fun showConfirmationDialog() {
+            val dialog = ConfirmDeleteDialog()
+            dialog.show(fragmentManager, null)
+            dialog.setListener(object : ConfirmDeleteDialog.Listener {
+                override fun onDeleteConfirmed() {
+                    removeSelectedItems()
+                }
+            })
+        }
+    }
+
+    private fun getTokenValue() {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        auth_token = sharedPreferences?.getString(AuthActivity.SAVE_TOKEN, "")
+    }
+
+    private fun removeSelectedItems() {
+        val selected = adapter.getSelectedItems()
+        println("selected$selected")
+        println(selected[0])
+        for (i in selected.indices) {
+            removeItem(selected[i])
+        }
+        actionMode?.finish()
+    }
+
+    fun loadItems() {
+        getTokenValue()
+        val call = api?.getItems(type, auth_token)
+
+        call?.enqueue(object : Callback<List<Item>> {
+            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+                refresh.isRefreshing = false
+                val items = response.body()
+                adapter.setItems(items!!)
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<List<Item>>, t: Throwable) {
+                println(t)
+                refresh.isRefreshing = false
+            }
+        })
+    }
+
+    private fun removeItem(id: Int) {
+        val call = api?.deleteItem(id, auth_token)
+        call?.enqueue(object : Callback<Item> {
+            override fun onResponse(call: Call<Item>, response: Response<Item>) {
+                loadItems()
+            }
+
+            override fun onFailure(call: Call<Item>, t: Throwable) {}
+        })
     }
 }
 
