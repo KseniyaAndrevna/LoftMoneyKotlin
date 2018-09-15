@@ -162,7 +162,7 @@ class ItemsFragment : Fragment() {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
                 refresh.isRefreshing = false
                 val items = response.body()
-                adapter.setItems(items!!)
+                items?.let { adapter.setItems(it) }
                 adapter.notifyDataSetChanged()
             }
 

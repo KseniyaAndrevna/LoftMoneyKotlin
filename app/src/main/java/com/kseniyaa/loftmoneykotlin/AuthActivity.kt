@@ -99,8 +99,8 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun getToken() {
-        val call = api!!.getAuthToken(userId)
-        call.enqueue(object : Callback<LinkedHashMap<String, String>> {
+        val call = api?.getAuthToken(userId)
+        call?.enqueue(object : Callback<LinkedHashMap<String, String>> {
             override fun onResponse(call: Call<LinkedHashMap<String, String>>, response: Response<LinkedHashMap<String, String>>) {
                 assert(response.body() != null)
                 val authData = response.body()
@@ -116,9 +116,9 @@ class AuthActivity : AppCompatActivity() {
 
     fun saveToken(token: String?) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = sharedPreferences!!.edit()
-        editor.putString(SAVE_TOKEN, token)
-        editor.apply()
+        val editor = sharedPreferences?.edit()
+        editor?.putString(SAVE_TOKEN, token)
+        editor?.apply()
     }
 
     companion object {
