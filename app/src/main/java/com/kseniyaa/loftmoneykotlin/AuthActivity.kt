@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +27,7 @@ class AuthActivity : AppCompatActivity() {
     private var googleSignInClient: GoogleSignInClient? = null
     private var auth: FirebaseAuth? = null
     private var api: Api? = null
-    private var user_id: String? = null
+    private var userId: String? = null
     private var token: String? = null
     private var sharedPreferences: SharedPreferences? = null
 
@@ -59,7 +58,7 @@ class AuthActivity : AppCompatActivity() {
 
 
     private fun signIn() {
-        val signInIntent = googleSignInClient!!.signInIntent
+        val signInIntent = googleSignInClient?.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
@@ -70,7 +69,7 @@ class AuthActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                user_id = account.id
+                userId = account.id
                 getToken()
                 firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
@@ -82,14 +81,14 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id!!)
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.id)
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        auth!!.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
+        auth?.signInWithCredential(credential)
+                ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "signInWithCredential:success")
-                        val user = auth!!.currentUser
+                        //val user = auth?.currentUser
                         val intent = Intent(this@AuthActivity, MainActivity::class.java)
                         startActivity(intent)
                     } else {
@@ -100,14 +99,15 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun getToken() {
-        val call = api!!.getAuthToken(user_id)
+        val call = api!!.getAuthToken(userId)
         call.enqueue(object : Callback<LinkedHashMap<String, String>> {
             override fun onResponse(call: Call<LinkedHashMap<String, String>>, response: Response<LinkedHashMap<String, String>>) {
                 assert(response.body() != null)
                 val authData = response.body()
-                token = authData!!["auth_token"] as String
+                token = authData?.get(getString(R.string.auth_token)) as String
                 saveToken(token)
             }
+
             override fun onFailure(call: Call<LinkedHashMap<String, String>>, t: Throwable) {
 
             }

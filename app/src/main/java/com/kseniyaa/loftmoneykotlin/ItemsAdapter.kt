@@ -28,20 +28,20 @@ class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
         holder.name?.text = items[position].name
         holder.price?.text = items[position].price.toString()
         val item = items[position]
-        holder.bind(item, listener, position, selections.get(position))
+        holder.bind(item, listener, position, selections.get(item.id))
     }
 
     override fun getItemCount() = items.size
 
     private val selections = SparseBooleanArray()
 
-    fun toggleItem(id: Int) {
+    fun toggleItem(id: Int, position: Int) {
         if (selections.get(id, false)) {
             selections.put(id, false)
         } else {
             selections.put(id, true)
         }
-        notifyItemChanged(id)
+        notifyItemChanged(position)
     }
 
     fun clearSelections() {
@@ -69,6 +69,7 @@ class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
                 price?.setTextColor(ContextCompat.getColor(itemView.context, R.color.item_text_price_exp_color))
             }
 
+            println(selected)
             itemView.isSelected = selected
 
             itemView.setOnClickListener {

@@ -1,7 +1,5 @@
 package com.kseniyaa.loftmoneykotlin
 
-import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -27,7 +25,7 @@ class ItemsFragment : Fragment() {
     var adapter = ItemsAdapter()
     var actionMode: ActionMode? = null
     private var sharedPreferences: SharedPreferences? = null
-    private var auth_token: String? = null
+    private var authToken: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +87,7 @@ class ItemsFragment : Fragment() {
             if (actionMode == null) {
                 return
             }
-            toggleItem(item.id)
+            toggleItem(item.id, position)
             actionMode?.title = getString(R.string.action_mode_title) + adapter.getSelectedItems().size
             println(adapter.getSelectedItems().size)
         }
@@ -99,12 +97,12 @@ class ItemsFragment : Fragment() {
                 return
             }
             (activity as AppCompatActivity).startSupportActionMode(ActionModeCallback())
-            toggleItem(item.id)
+            toggleItem(item.id, position)
             actionMode?.title = getString(R.string.action_mode_title) + 1
         }
 
-        private fun toggleItem(position: Int) {
-            adapter.toggleItem(position)
+        private fun toggleItem(id: Int, position: Int) {
+            adapter.toggleItem(id, position)
         }
 
         internal inner class ActionModeCallback : ActionMode.Callback {
@@ -135,25 +133,21 @@ class ItemsFragment : Fragment() {
         }
 
         private fun showConfirmationDialog() {
-            val dialog = ConfirmDeleteDialog()
-            dialog.show(fragmentManager, null)
-            dialog.setListener(object : ConfirmDeleteDialog.Listener {
+            ConfirmDeleteDialog(object : ConfirmDeleteDialog.Listener {
                 override fun onDeleteConfirmed() {
                     removeSelectedItems()
                 }
-            })
+            }).show(fragmentManager, null)
         }
     }
 
     private fun getTokenValue() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
-        auth_token = sharedPreferences?.getString(AuthActivity.SAVE_TOKEN, "")
+        authToken = sharedPreferences?.getString(AuthActivity.SAVE_TOKEN, "")
     }
 
     private fun removeSelectedItems() {
         val selected = adapter.getSelectedItems()
-        println("selected$selected")
-        println(selected[0])
         for (i in selected.indices) {
             removeItem(selected[i])
         }
@@ -162,7 +156,7 @@ class ItemsFragment : Fragment() {
 
     fun loadItems() {
         getTokenValue()
-        val call = api?.getItems(type, auth_token)
+        val call = api?.getItems(type, authToken)
 
         call?.enqueue(object : Callback<List<Item>> {
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
@@ -180,7 +174,7 @@ class ItemsFragment : Fragment() {
     }
 
     private fun removeItem(id: Int) {
-        val call = api?.deleteItem(id, auth_token)
+        val call = api?.deleteItem(id, authToken)
         call?.enqueue(object : Callback<Item> {
             override fun onResponse(call: Call<Item>, response: Response<Item>) {
                 loadItems()
