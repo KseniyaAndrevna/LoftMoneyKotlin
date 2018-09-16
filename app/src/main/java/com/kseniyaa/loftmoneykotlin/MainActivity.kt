@@ -1,13 +1,17 @@
 package com.kseniyaa.loftmoneykotlin
 
-
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ActionMode
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    var actionMode: ActionMode? = null
+    private var viewPager: ViewPager? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,18 +21,18 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MainPagesAdapter(supportFragmentManager, this)
 
-        val viewPager = view_pager
-        viewPager.adapter = adapter
+        viewPager = view_pager
+        viewPager?.adapter = adapter
 
-        tab_layout.setupWithViewPager(viewPager)
 
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                actionMode?.finish()
+            }
 
             override fun onPageSelected(position: Int) {
                 when (position) {
                     MainPagesAdapter.PAGE_INCOMES, MainPagesAdapter.PAGE_EXPENSES -> btn_fab.show()
-
                     MainPagesAdapter.PAGE_BALANCE -> btn_fab.hide()
                 }
             }
@@ -37,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         btn_fab.setOnClickListener {
-            val page = viewPager.currentItem
+            val page = viewPager?.currentItem
 
             var type: String? = null
 
@@ -49,12 +53,18 @@ class MainActivity : AppCompatActivity() {
             if (type != null) {
                 val intent = Intent(this@MainActivity, AddActivity::class.java)
                 intent.putExtra(AddActivity.KEY_TYPE, type)
-                startActivityForResult(intent, ITEM_REQUEST_CODE)
+                startActivityForResult(intent, ItemsFragment.ITEM_REQUEST_CODE)
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+
+    override fun onResume() {
+        super.onResume()
+        tab_layout.setupWithViewPager(viewPager)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         val fragments = supportFragmentManager.fragments
@@ -63,8 +73,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val ITEM_REQUEST_CODE = 100
+    override fun onSupportActionModeFinished(mode: ActionMode) {
+        super.onSupportActionModeFinished(mode)
+        tab_layout.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.tab_color_primary))
+        btn_fab.show()
+    }
+
+    override fun onSupportActionModeStarted(mode: ActionMode) {
+        super.onSupportActionModeStarted(mode)
+        tab_layout.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.action_mode_back))
+        btn_fab.hide()
+        actionMode = mode
     }
 }
 
